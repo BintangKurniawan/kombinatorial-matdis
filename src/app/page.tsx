@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Baloo_Bhai_2 } from "next/font/google";
-import { useState } from "react";
+import TableMenu from "@/components/ui/tableMenu";
+import { getKombinasiMenu } from "@/lib/kombinasi";
 
 const balooBhaiBold = Baloo_Bhai_2({
   weight: ["700"],
@@ -10,147 +11,88 @@ const balooBhaiBold = Baloo_Bhai_2({
 });
 
 export default function Home() {
-  // ini semua data
   const [makananList, setMakananList] = useState<string[]>([""]);
   const [minumanList, setMinumanList] = useState<string[]>([""]);
   const [tambahanList, setTambahanList] = useState<string[]>([""]);
+  const [kombinasiList, setKombinasiList] = useState<
+    { makanan: string; minuman: string; tambahan: string[] }[]
+  >([]);
+  const inputSections = [
+  { label: "Makanan", list: makananList, setList: setMakananList },
+  { label: "Minuman", list: minumanList, setList: setMinumanList },
+  { label: "Tambahan (Opsional)", list: tambahanList, setList: setTambahanList },
+];
 
-  const handleAddMakananList = () => {
-    setMakananList([...makananList, ""]);
-  };
-  const handleRemoveMakananList = (i: number) => {
-    const deleteVal = [...makananList];
-    deleteVal.splice(i, 1);
-    setMakananList(deleteVal);
-    console.log(minumanList);
-  };
 
-  const handleAddMinumanList = () => {
-    setMinumanList([...minumanList, ""]);
+  const handleAdd = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>) =>
+    setList([...list, ""]);
+  const handleRemove = (i: number, list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>) => {
+    const newList = [...list];
+    newList.splice(i, 1);
+    setList(newList);
   };
-  const handleRemoveMinumanList = (i: number) => {
-    const deleteVal = [...minumanList];
-    deleteVal.splice(i, 1);
-    setMinumanList(deleteVal);
-    console.log(minumanList);
-  };
-
-  const handleAddTambahanList = () => {
-    setTambahanList([...tambahanList, ""]);
-  };
-  const handleRemoveTambahanList = (i: number) => {
-    const deleteVal = [...tambahanList];
-    deleteVal.splice(i, 1);
-    setTambahanList(deleteVal);
-    console.log(tambahanList);
-  };
-
-  const handleInputMakananChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const { value } = event.target;
-    const list = [...makananList];
-    list[index] = value;
-    setMakananList(list);
-  };
-
-  const handleInputMinumanChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const { value } = event.target;
-    const list = [...minumanList];
-    list[index] = value;
-    setMinumanList(list);
-  };
-
-  const handleInputTambahanChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const { value } = event.target;
-    const list = [...tambahanList];
-    list[index] = value;
-    setTambahanList(list);
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    list: string[],
+    setList: React.Dispatch<React.SetStateAction<string[]>>
+  ) => {
+    const updated = [...list];
+    updated[index] = event.target.value;
+    setList(updated);
   };
 
   const handleBuatKombinasi = () => {
-    console.log(1);
+    const hasil = getKombinasiMenu(makananList, minumanList, tambahanList);
+    setKombinasiList(hasil);
   };
 
   return (
     <div className={`${balooBhaiBold.className} flex flex-col items-center justify-center my-10`}>
-      <h1 className="font-bold text-7xl mb-7">Variasi Menu</h1>
+      <h1 className="text-5xl font-bold mb-8">Variasi Menu Restoran</h1>
 
-      <div className="max-w-[1220px] flex flex-row items-center gap-28 justify-center">
-        <div className="flex flex-col items-start justify-center gap-4">
-          <h2 className="font-bold text-3xl">Makanan</h2>
-          <div className="flex flex-col items-start justify-center gap-3">
-            {makananList.map((makanan, index) => {
-              const deleteBtn = index >= 1;
-
-              return (
-                <div className="flex flex-row items-start gap-2" key={index}>
-                  <input type="text" placeholder="Masukkan nama makanan" className="border-2 border-gray-400 py-4 px-6 rounded-2xl" onChange={(event) => handleInputMakananChange(event, index)} />
-                  {deleteBtn && (
-                    <button className="bg-red-500 text-white shadow-xs hover:bg-red-600 py-4 px-6 rounded-2xl cursor-pointer" onClick={() => handleRemoveMakananList(index)}>
-                      Hapus
-                    </button>
-                  )}{" "}
-                </div>
-              );
-            })}
-          </div>
-
-          <button className="bg-blue-600 text-white shadow-xs hover:bg-primary/90 py-4 px-6 rounded-2xl cursor-pointer" onClick={handleAddMakananList}>
-            Tambah list
+      <div className="flex gap-16">
+        {inputSections.map(({ label, list, setList }, idx) => (
+  <div key={idx} className="flex flex-col gap-4">
+    <h2 className="text-2xl font-bold">{label}</h2>
+    {list.map((val, i) => (
+      <div key={i} className="flex gap-2">
+        <input
+          type="text"
+          className="border border-gray-400 px-4 py-2 rounded-xl"
+          placeholder={`Masukkan ${label.toLowerCase()}`}
+          value={val}
+          onChange={(e) => handleInputChange(e, i, list, setList)}
+        />
+        {i > 0 && (
+          <button
+            className="bg-red-500 text-white px-4 rounded-xl"
+            onClick={() => handleRemove(i, list, setList)}
+          >
+            Hapus
           </button>
-        </div>
+        )}
+      </div>
+    ))}
+    <button
+      className="bg-blue-600 text-white px-4 py-2 rounded-xl mt-2"
+      onClick={() => handleAdd(list, setList)}
+    >
+      Tambah {label}
+    </button>
+  </div>
+))}
 
-        <div className="flex flex-col items-start justify-center gap-4">
-          <h1 className="font-bold text-2xl">Minuman</h1>
-          <div className="flex flex-col items-start justify-center gap-3">
-            {minumanList.map((minuman, index) => {
-              const deleteBtn = index >= 1;
-
-              return (
-                <div className="flex flex-row items-start gap-2" key={index}>
-                  <input type="text" placeholder="Masukkan nama minuman" className="border-2 border-gray-400 py-4 px-6 rounded-2xl" onChange={(event) => handleInputMinumanChange(event, index)} />
-                  {deleteBtn && (
-                    <button className="bg-red-500 text-white shadow-xs hover:bg-red-600 py-4 px-6 rounded-2xl cursor-pointer" onClick={() => handleRemoveMinumanList(index)}>
-                      Hapus
-                    </button>
-                  )}{" "}
-                </div>
-              );
-            })}
-          </div>
-
-          <button className="bg-blue-600 text-white shadow-xs hover:bg-primary/90 py-4 px-6 rounded-2xl cursor-pointer" onClick={handleAddMinumanList}>
-            Tambah list
-          </button>
-        </div>
-
-        <div className="flex flex-col items-start justify-center gap-4">
-          <h1 className="font-bold text-2xl">Tambahan (opsional)</h1>
-          <div className="flex flex-col items-start justify-center gap-3">
-            {tambahanList.map((tambahan, index) => {
-              const deleteBtn = index >= 1;
-
-              return (
-                <div className="flex flex-row items-start gap-2" key={index}>
-                  <input type="text" placeholder="Masukkan nama tambahan (opsional)" className="border-2 border-gray-400 py-4 px-6 rounded-2xl" onChange={(event) => handleInputTambahanChange(event, index)} />
-                  {deleteBtn && (
-                    <button className="bg-red-500 text-white shadow-xs hover:bg-red-600 py-4 px-6 rounded-2xl cursor-pointer" onClick={() => handleRemoveTambahanList(index)}>
-                      Hapus
-                    </button>
-                  )}{" "}
-                </div>
-              );
-            })}
-          </div>
-
-          <button className="bg-blue-600 text-white shadow-xs hover:bg-primary/90 py-4 px-6 rounded-2xl cursor-pointer" onClick={handleAddTambahanList}>
-            Tambah list
-          </button>
-        </div>
       </div>
 
-      <button className="bg-blue-600 text-white shadow-xs hover:bg-primary/90 py-4 px-6 rounded-2xl cursor-pointer" onClick={handleBuatKombinasi}>
+      <button
+        onClick={handleBuatKombinasi}
+        className="mt-8 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl"
+      >
         Buat Kombinasi
       </button>
+
+      <TableMenu kombinasiList={kombinasiList} />
     </div>
   );
 }
