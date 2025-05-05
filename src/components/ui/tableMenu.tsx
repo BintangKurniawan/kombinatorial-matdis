@@ -31,9 +31,7 @@ const TableMenu: React.FC<TableMenuProps> = ({ kombinasiList }) => {
               <td className="border px-4 py-2">{i + 1}</td>
               <td className="border px-4 py-2">{item.makanan}</td>
               <td className="border px-4 py-2">{item.minuman}</td>
-              <td className="border px-4 py-2">
-                {item.tambahan.length > 0 ? item.tambahan.join(", ") : "-"}
-              </td>
+              <td className="border px-4 py-2">{item.tambahan.length > 0 ? item.tambahan.join(", ") : "-"}</td>
             </tr>
           ))}
         </tbody>
