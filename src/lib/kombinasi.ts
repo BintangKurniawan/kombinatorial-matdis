@@ -3,7 +3,9 @@ interface Kombinasi {
   minuman: string;
   tambahan: string[];
 }
-
+function normalize(text: string): string {
+  return text.trim().toLowerCase(); // Bisa tambahkan `.replace(/\s+/g, " ")` kalau mau hapus spasi ganda juga
+}
 export function getKombinasiMenu(
   makananList: string[],
   minumanList: string[],
@@ -11,8 +13,9 @@ export function getKombinasiMenu(
 ): Kombinasi[] {
   const makananValid = makananList.filter((m) => m.trim() !== "");
   const minumanValid = minumanList.filter((m) => m.trim() !== "");
-  const tambahanValid = tambahanList.filter((t) => t.trim() !== "");
-
+  const tambahanValid = Array.from(
+    new Set(tambahanList.map(normalize).filter(Boolean))
+  );
   const tambahanSubsets = getSubsets(tambahanValid);
   const hasil: Kombinasi[] = [];
 
