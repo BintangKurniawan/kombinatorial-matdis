@@ -14,29 +14,32 @@ const TableMenu: React.FC<TableMenuProps> = ({ kombinasiList }) => {
   if (kombinasiList.length === 0) return null;
 
   return (
-    <div className="mt-10 w-[90%]">
-      <h2 className="text-2xl font-bold mb-4">Hasil Kombinasi ({kombinasiList.length})</h2>
-      <table className="table-auto w-full border border-gray-400 text-center">
-        <thead className="bg-gray-200">
+    <div className="mt-10 w-full max-w-5xl mx-auto">
+    <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">Hasil Kombinasi ({kombinasiList.length})</h2>
+    <div className="overflow-x-auto rounded-2xl shadow-md bg-white">
+      <table className="min-w-full text-sm text-gray-700">
+        <thead className="bg-[#f3f4f6] text-gray-900 uppercase text-xs tracking-wider rounded-t-2xl">
           <tr>
-            <th className="border px-4 py-2">No</th>
-            <th className="border px-4 py-2">Makanan</th>
-            <th className="border px-4 py-2">Minuman</th>
-            <th className="border px-4 py-2">Tambahan</th>
+            <th className="px-6 py-4 text-left">No</th>
+            <th className="px-6 py-4 text-left">Makanan</th>
+            <th className="px-6 py-4 text-left">Minuman</th>
+            <th className="px-6 py-4 text-left">Tambahan</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-gray-200">
           {kombinasiList.map((item, i) => (
-            <tr key={i}>
-              <td className="border px-4 py-2">{i + 1}</td>
-              <td className="border px-4 py-2">{item.makanan}</td>
-              <td className="border px-4 py-2">{item.minuman}</td>
-              <td className="border px-4 py-2">{item.tambahan.length > 0 ? item.tambahan.join(", ") : "-"}</td>
+            <tr key={i} className="hover:bg-[#f9fafb] transition">
+              <td className="px-6 py-4">{i + 1}</td>
+              <td className="px-6 py-4">{item.makanan}</td>
+              <td className="px-6 py-4">{item.minuman}</td>
+              <td className="px-6 py-4">{item.tambahan.length > 0 ? item.tambahan.join(", ") : "-"}</td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+  </div>
+  
   );
 };
 
