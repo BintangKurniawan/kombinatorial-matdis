@@ -15,6 +15,7 @@ export default function Home() {
   const [minumanList, setMinumanList] = useState<string[]>([""]);
   const [tambahanList, setTambahanList] = useState<string[]>([""]);
   const [kombinasiList, setKombinasiList] = useState<{ makanan: string; minuman: string; tambahan: string[] }[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleAdd = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>) => setList([...list, ""]);
   const handleRemove = (i: number, list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>) => {
@@ -29,6 +30,14 @@ export default function Home() {
   };
 
   const handleBuatKombinasi = () => {
+    if (makananList[0] === "" || minumanList[0] === "") {
+      setToastMessage("Kolom Makanan dan Minuman wajib diisi!");
+      setTimeout(() => {
+        setToastMessage(null);
+      }, 3000);
+      return;
+    }
+
     const hasil = getKombinasiMenu(makananList, minumanList, tambahanList);
     setKombinasiList(hasil);
   };
@@ -143,6 +152,12 @@ export default function Home() {
             Hitung Kombinasi
           </button>
         </div>
+
+        {toastMessage && (
+          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-lg shadow-md">
+            {toastMessage}
+          </div>
+        )}
 
         <TableMenu kombinasiList={kombinasiList} />
       </div>
