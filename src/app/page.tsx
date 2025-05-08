@@ -17,6 +17,12 @@ export default function Home() {
   const [kombinasiList, setKombinasiList] = useState<{ makanan: string; minuman: string; tambahan: string[] }[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const inputSections = [
+    { label: "Makanan", icon: "🍔", wajib: true, list: makananList, setList: setMakananList, color: "orange", placeholder: "Masukkan item makanan..." },
+    { label: "Minuman", icon: "🥤", wajib: true, list: minumanList, setList: setMinumanList, color: "blue", placeholder: "Masukkan item minuman..." },
+    { label: "Tambahan", icon: "🧂", wajib: false, list: tambahanList, setList: setTambahanList, color: "green", placeholder: "Masukkan item tambahan..." },
+  ];
+
   const handleAdd = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>) => setList([...list, ""]);
   const handleRemove = (i: number, list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>) => {
     const newList = [...list];
@@ -63,101 +69,37 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="border border-gray-300 rounded-xl shadow-sm p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-orange-700 flex items-center gap-2">🍔 Makanan</span>
-                <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded">Wajib</span>
-              </div>
-              {makananList.map((val, i) => (
-                <div key={i} className="flex items-center gap-2 mb-2">
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Masukkan item makanan..."
-                    value={val}
-                    onChange={(e) => handleInputChange(e, i, makananList, setMakananList)}
-                  />
-                  {i > 0 && (
-                    <button onClick={() => handleRemove(i, makananList, setMakananList)} className="text-gray-400 hover:text-red-500">✕</button>
-                  )}
+            {inputSections.map((section, i) => (
+              <div className="border border-gray-300 rounded-xl shadow-sm p-4" key={i}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold text-orange-700 flex items-center gap-2">
+                    {section.icon} {section.label}
+                  </span>
+                  <span className={`text-xs bg-${section.color}-100 text-${section.color}-700 px-2 py-0.5 rounded`}>{section.wajib ? "Wajib" : "Opsional"}</span>
                 </div>
-              ))}
-              <button
-                onClick={() => handleAdd(makananList, setMakananList)}
-                className="w-full bg-orange-50 text-orange-600 py-2 rounded text-sm hover:bg-orange-100"
-              >
-                + Tambah Opsi Makanan
-              </button>
-            </div>
-
-            <div className="border border-gray-300 rounded-xl shadow-sm p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-blue-700 flex items-center gap-2">🥤 Minuman</span>
-                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Wajib</span>
+                {section.list.map((val, i) => (
+                  <div key={i} className="flex items-center gap-2 mb-2">
+                    <input type="text" className="w-full p-2 border border-gray-300 rounded" placeholder={section.placeholder} value={val} onChange={(e) => handleInputChange(e, i, section.list, section.setList)} />
+                    {i > 0 && (
+                      <button onClick={() => handleRemove(i, section.list, section.setList)} className={`text-gray-400 hover:text-${section.color}-500`}>
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button onClick={() => handleAdd(section.list, section.setList)} className={`w-full bg-orange-50 text-${section.color}-600 py-2 rounded text-sm hover:bg-${section.color}-100`}>
+                  + Tambah Opsi {section.label}
+                </button>
               </div>
-              {minumanList.map((val, i) => (
-                <div key={i} className="flex items-center gap-2 mb-2">
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Masukkan item minuman..."
-                    value={val}
-                    onChange={(e) => handleInputChange(e, i, minumanList, setMinumanList)}
-                  />
-                  {i > 0 && (
-                    <button onClick={() => handleRemove(i, minumanList, setMinumanList)} className="text-gray-400 hover:text-red-500">✕</button>
-                  )}
-                </div>
-              ))}
-              <button
-                onClick={() => handleAdd(minumanList, setMinumanList)}
-                className="w-full bg-blue-50 text-blue-700 py-2 rounded text-sm hover:bg-blue-100"
-              >
-                + Tambah Opsi Minuman
-              </button>
-            </div>
-
-            <div className="border border-gray-300 rounded-xl shadow-sm p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-green-700 flex items-center gap-2">🧂 Tambahan</span>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">Opsional</span>
-              </div>
-              {tambahanList.map((val, i) => (
-                <div key={i} className="flex items-center gap-2 mb-2">
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded"
-                    placeholder="Masukkan item tambahan..."
-                    value={val}
-                    onChange={(e) => handleInputChange(e, i, tambahanList, setTambahanList)}
-                  />
-                  {i > 0 && (
-                    <button onClick={() => handleRemove(i, tambahanList, setTambahanList)} className="text-gray-400 hover:text-red-500">✕</button>
-                  )}
-                </div>
-              ))}
-              <button
-                onClick={() => handleAdd(tambahanList, setTambahanList)}
-                className="w-full bg-green-50 text-green-700 py-2 rounded text-sm hover:bg-green-100"
-              >
-                + Tambah Opsi Tambahan
-              </button>
-            </div>
+            ))}
           </div>
 
-          <button
-            onClick={handleBuatKombinasi}
-            className="w-full bg-orange-600 text-white py-3 rounded-lg mt-6 shadow-lg hover:bg-orange-700"
-          >
+          <button onClick={handleBuatKombinasi} className="w-full bg-orange-600 text-white py-3 rounded-lg mt-6 shadow-lg hover:bg-orange-700">
             Hitung Kombinasi
           </button>
         </div>
 
-        {toastMessage && (
-          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-lg shadow-md">
-            {toastMessage}
-          </div>
-        )}
+        {toastMessage && <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-4 rounded-lg shadow-md">{toastMessage}</div>}
 
         <TableMenu kombinasiList={kombinasiList} />
       </div>
