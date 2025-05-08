@@ -54,7 +54,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {/* Makanan */}
             <div className="border border-gray-300 rounded-xl shadow-sm p-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-semibold text-orange-700 flex items-center gap-2">🍔 Makanan</span>
@@ -82,7 +81,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Minuman */}
             <div className="border border-gray-300 rounded-xl shadow-sm p-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-semibold text-blue-700 flex items-center gap-2">🥤 Minuman</span>
@@ -110,7 +108,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* Tambahan */}
             <div className="border border-gray-300 rounded-xl shadow-sm p-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="font-semibold text-green-700 flex items-center gap-2">🧂 Tambahan</span>
