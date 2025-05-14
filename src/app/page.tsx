@@ -72,7 +72,7 @@ export default function Home() {
             {inputSections.map((section, i) => (
               <div className="border border-gray-300 rounded-xl shadow-sm p-4" key={i}>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-semibold text-orange-700 flex items-center gap-2">
+                  <span className={`font-semibold text-${section.color}-700 flex items-center gap-2`}>
                     {section.icon} {section.label}
                   </span>
                   <span className={`text-xs bg-${section.color}-100 text-${section.color}-700 px-2 py-0.5 rounded`}>{section.wajib ? "Wajib" : "Opsional"}</span>
@@ -81,13 +81,13 @@ export default function Home() {
                   <div key={i} className="flex items-center gap-2 mb-2">
                     <input type="text" className="w-full p-2 border border-gray-300 rounded" placeholder={section.placeholder} value={val} onChange={(e) => handleInputChange(e, i, section.list, section.setList)} />
                     {i > 0 && (
-                      <button onClick={() => handleRemove(i, section.list, section.setList)} className={`text-gray-400 hover:text-${section.color}-500`}>
+                      <button onClick={() => handleRemove(i, section.list, section.setList)} className={`text-gray-400 hover:text-${section.color}-500 cursor-pointer`}>
                         ✕
                       </button>
                     )}
                   </div>
                 ))}
-                <button onClick={() => handleAdd(section.list, section.setList)} className={`w-full bg-orange-50 text-${section.color}-600 py-2 rounded text-sm hover:bg-${section.color}-100`}>
+                <button onClick={() => handleAdd(section.list, section.setList)} className={`w-full bg-${section.color}-50 text-${section.color}-600 py-2 rounded text-sm hover:bg-${section.color}-100 cursor-pointer`}>
                   + Tambah Opsi {section.label}
                 </button>
               </div>
